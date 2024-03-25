@@ -3,6 +3,18 @@
 // console.log(ndef)
 let text = document.getElementById('text')
 
+function writeNFCTag(message){
+    alert("Put the device close to the tag to write");
+    const ndef = new NDEFReader();
+    ndef.write(
+      message
+    ).then(() => {
+      alert("Message written.");
+    }).catch(error => {
+      alert(`Write failed :-( try again: ${error}.`);
+    });
+  }
+
 async function test(){
     if ('NDEFReader' in window) {
         const reader = new NDEFReader();
