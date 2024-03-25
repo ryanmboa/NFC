@@ -4,6 +4,7 @@
 let text = document.getElementById('text')
 let data = document.getElementById('data')
 let scan = document.getElementById('scan')
+let writeConfirm = document.getElementById('writeConfirm')
 
 function writeNFCTag(message){
     alert("Put the device close to the tag to write");
@@ -17,7 +18,7 @@ function writeNFCTag(message){
     });
   }
 
-async function test(){
+function test(){
     if ('NDEFReader' in window) {
         text.textContent = "Web NFC is supported by this browser."
       } else {
@@ -27,6 +28,35 @@ async function test(){
       
 }
 
+const encoder = new TextEncoder()
+const dataJson = {
+    firstname: 'Mambou',
+    lastname: 'Ryan'
+}
+const jsonRecord = {
+    recordType: 'mime',
+    mediaType: 'application/json',
+    data: encoder.encode(JSON.stringify(data))
+}
+
+async function write(){
+    const ndef = new NDEFReader();
+    ndef.write({records: jsonRecord})
+    .then(data => {
+        writeConfirm.textContent = `${data} Successfully written!`
+    })
+    .catch(error => {
+        writeConfirm.textContent = error
+    })
+   
+}
+
+async function readJson(record){
+    if (record.mediaType === "application/json") {
+        const decoder = new TextDecoder();
+        console.log(`JSON: ${JSON.parse(decoder.decode(record.data))}`);
+      }
+}
 
 async function scanning(){
     const reader = new NDEFReader();
@@ -34,7 +64,8 @@ async function scanning(){
           await reader.scan();
           reader.onreading = (event) => {
             console.log(`NFC tag data: ${event.message}`);
-            data.textContent = `NFC tag data: ${JSON.stringify(event.message)}`
+            // data.textContent = `NFC tag data: ${JSON.stringify(event.message)}`
+            data.textContent = readJson(event.message.records)
           };
         } catch (error) {
             data.textContent = `Error: ${error}`
