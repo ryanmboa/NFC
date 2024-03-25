@@ -2,6 +2,7 @@
 // // await ndef.write("Hello World");
 // console.log(ndef)
 let text = document.getElementById('text')
+let data = document.getElementById('data')
 
 function writeNFCTag(message){
     alert("Put the device close to the tag to write");
@@ -23,9 +24,10 @@ async function test(){
           await reader.scan();
           reader.onreading = (event) => {
             console.log(`NFC tag data: ${event.message}`);
-            text.textContent = `NFC tag data: ${event.message}`
+            data.textContent = `NFC tag data: ${event.message}`
           };
         } catch (error) {
+            data.textContent = `Error: ${error}`
           console.error(`Error: ${error}`);
         }
       } else {
