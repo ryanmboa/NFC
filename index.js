@@ -17,6 +17,7 @@ function writeNFCTag(message){
 
 async function test(){
     if ('NDEFReader' in window) {
+        text.textContent = "Web NFC is supported by this browser."
         const reader = new NDEFReader();
         try {
           await reader.scan();
