@@ -1,6 +1,7 @@
 // const ndef = new NDEFReader();
 // // await ndef.write("Hello World");
 // console.log(ndef)
+let text = document.getElementById('text')
 
 async function test(){
     if ('NDEFReader' in window) {
@@ -9,12 +10,14 @@ async function test(){
           await reader.scan();
           reader.onreading = (event) => {
             console.log(`NFC tag data: ${event.message}`);
+            text.textContent = `NFC tag data: ${event.message}`
           };
         } catch (error) {
           console.error(`Error: ${error}`);
         }
       } else {
         console.log("Web NFC is not supported by this browser.");
+        text.textContent = "Web NFC is not supported by this browser."
       }
       
 }
@@ -28,12 +31,18 @@ async function test(){
 //   });
 
 
-// test()
+test()
 
 let requestButton = document.querySelector('.button')
 
 async function askPermission(){
-    const authorized = await navigator.usb.requestDevice({ filters: [{ vendorId: 0x072f }] })
+    navigator.usb.requestDevice({ filters: [{ vendorId: 1839 }] })
+    .then(device => {
+        console.log(device)
+        setup(device)
+        read(device)
+    })
+
     // .then(device => {
     //     // console.log(device.productName)
     //     // console.log(device.manufacturerName)
@@ -43,8 +52,9 @@ async function askPermission(){
 
     // return await authorized
 
-    await setup(authorized)
-    await read(authorized)
+    // console.log(authorized)
+    // await setup(authorized)
+    // await read(authorized)
     // return await authorized
 
 }
