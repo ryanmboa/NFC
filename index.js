@@ -34,7 +34,7 @@ async function scanning(){
           await reader.scan();
           reader.onreading = (event) => {
             console.log(`NFC tag data: ${event.message}`);
-            data.textContent = `NFC tag data: ${JSON.stringify(event.message.records)}`
+            data.textContent = `NFC tag data: ${JSON.stringify(event.message)}`
           };
         } catch (error) {
             data.textContent = `Error: ${error}`
