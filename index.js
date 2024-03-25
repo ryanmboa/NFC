@@ -3,6 +3,7 @@
 // console.log(ndef)
 let text = document.getElementById('text')
 let data = document.getElementById('data')
+let scan = document.getElementById('scan')
 
 function writeNFCTag(message){
     alert("Put the device close to the tag to write");
@@ -19,7 +20,16 @@ function writeNFCTag(message){
 async function test(){
     if ('NDEFReader' in window) {
         text.textContent = "Web NFC is supported by this browser."
-        const reader = new NDEFReader();
+      } else {
+        console.log("Web NFC is not supported by this browser.");
+        text.textContent = "Web NFC is not supported by this browser."
+      }
+      
+}
+
+
+async function scanning(){
+    const reader = new NDEFReader();
         try {
           await reader.scan();
           reader.onreading = (event) => {
@@ -30,12 +40,10 @@ async function test(){
             data.textContent = `Error: ${error}`
           console.error(`Error: ${error}`);
         }
-      } else {
-        console.log("Web NFC is not supported by this browser.");
-        text.textContent = "Web NFC is not supported by this browser."
-      }
-      
 }
+
+
+scan.addEventListener('click', scanning)
 
 // document.addEventListener('DOMContentLoaded', async () => {
 //     let devices = await navigator.usb.getDevices();
@@ -51,7 +59,7 @@ test()
 let requestButton = document.querySelector('.button')
 
 async function askPermission(){
-    navigator.usb.requestDevice({ filters: [{ vendorId: 1839 }] })
+    navigator.hid.requestDevice({ filters: [] })
     .then(device => {
         console.log(device)
         setup(device)
